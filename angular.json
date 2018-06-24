@@ -23,9 +23,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/dygraph.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/dygraph.js"
+            ]
           },
           "configurations": {
             "production": {
