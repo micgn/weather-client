@@ -4,4 +4,21 @@
   right: 10px;
   top: 40px;
   bottom: 10px;
+
+  z-index: 1;
+}
+
+#current {
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  padding: 20px;
+}
+
+tr:nth-child(even) {
+  background: #FFF
+}
+
+tr:nth-child(odd) {
+  background: #CCC
 }
