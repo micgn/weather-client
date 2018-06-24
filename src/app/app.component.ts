@@ -12,17 +12,26 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const data = `Date,A,B
-2016/01/01,10,20
-2016/07/01,20,10
-2016/12/31,40,30
+    const data = `Date,temperature 1,temperature 2,humidity,pressure
+2016/01/01 12:30:33,10,20,15,22
+2016/01/01 13:10:03,20,10,17,18
+2016/01/01 14:00:01,40,30,33,12
 `;
     const g = new Dygraph(document.getElementById('chart'), data, {
       legend: 'always',
+      labelsSeparateLines: true,
       showRoller: false,
       rollPeriod: 0,
       customBars: false,
       ylabel: 'Temperature (°C)',
+      strokeWidth: 3,
+      highlightCircleSize: 6,
+      series: {
+        'humidity' : {
+          strokeWidth: 1
+        }
+      },
+      colors: ['#cc3300', '#ff9966', 'blue', 'yellow']
     });
 
   }
