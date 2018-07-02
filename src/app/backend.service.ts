@@ -21,7 +21,7 @@ export class BackendService {
       })
     };
 
-    this.http.get('/data', options).subscribe(res => console.info(res));
+    return this.http.get('/data', options);
   }
 
 }
