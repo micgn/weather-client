@@ -1,4 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {BackendService} from './backend.service';
 
 declare var Dygraph: any;
 
@@ -9,8 +10,13 @@ declare var Dygraph: any;
 })
 export class AppComponent implements OnInit {
 
+  constructor(private backend: BackendService) {
+  }
+
 
   ngOnInit(): void {
+
+    this.backend.chartData();
 
     const data = `Date,temperature 1,temperature 2,humidity,pressure
 2016/01/01 12:30:33,10,20,15,22
@@ -27,7 +33,7 @@ export class AppComponent implements OnInit {
       strokeWidth: 3,
       highlightCircleSize: 6,
       series: {
-        'humidity' : {
+        'humidity': {
           strokeWidth: 1
         }
       },

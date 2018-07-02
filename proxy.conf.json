@@ -1,0 +1,8 @@
+{
+  "/data": {
+    "target": "https://trali.de/weather",
+    "secure": true,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}
