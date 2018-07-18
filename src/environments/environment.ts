@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  // needs to be the same as in the backend!
   backendAuth: ''
 };
 

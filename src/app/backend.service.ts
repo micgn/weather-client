@@ -21,7 +21,7 @@ export class BackendService {
       })
     };
 
-    return this.http.get('/data', options);
+    return this.http.get('data', options);
   }
 
 }
