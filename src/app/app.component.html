@@ -1,24 +1,24 @@
 <div id="current">
   <table>
     <tr>
-      <td>last</td>
-      <td>24.06.18 12:48:33</td>
-    </tr>
-    <tr>
       <td>temperature 1</td>
-      <td>30°C</td>
+      <td>{{current_t1 | number:'2.1-1' }}°C</td>
+      <td>{{time_t1 | date:'medium'}}</td>
     </tr>
     <tr>
       <td>temperature 2</td>
-      <td>30°C</td>
+      <td>{{current_t2 | number:'2.1-1' }}°C</td>
+      <td>{{time_t2 | date:'medium'}}</td>
     </tr>
     <tr>
       <td>humidity</td>
-      <td>20%</td>
+      <td>{{current_h | number:'2.1-1' }}%</td>
+      <td>{{time_h | date:'medium'}}</td>
     </tr>
     <tr>
       <td>pressure</td>
-      <td>1023 hPa</td>
+      <td>{{current_p | number:'2.1-1' }} hPa</td>
+      <td>{{time_p | date:'medium'}}</td>
     </tr>
   </table>
 </div>

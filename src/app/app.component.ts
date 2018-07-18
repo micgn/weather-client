@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BackendService} from './backend.service';
 
 declare var Dygraph: any;
@@ -9,6 +9,16 @@ declare var Dygraph: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
+  current_t1: number;
+  time_t1: number;
+  current_t2: number;
+  time_t2: number;
+  current_p: number;
+  time_p: number;
+  current_h: number;
+  time_h: number;
+
 
   constructor(private backend: BackendService) {
   }
@@ -33,6 +43,26 @@ export class AppComponent implements OnInit {
     ];*/
 
     this.backend.chartData().subscribe(chartData => {
+
+      const current = chartData['current'];
+      if (current != null) {
+        if (current['TEMPERATURE_1'] != null) {
+          this.current_t1 = current['TEMPERATURE_1']['value'];
+          this.time_t1 = current['TEMPERATURE_1']['time'];
+        }
+        if (current['TEMPERATURE_2'] != null) {
+          this.current_t2 = current['TEMPERATURE_2']['value'];
+          this.time_t2 = current['TEMPERATURE_2']['time'];
+        }
+        if (current['HUMIDITY'] != null) {
+          this.current_h = current['HUMIDITY']['value'];
+          this.time_h = current['HUMIDITY']['time'];
+        }
+        if (current['PRESSURE'] != null) {
+          this.current_p = current['PRESSURE']['value'];
+          this.time_p = current['PRESSURE']['time'];
+        }
+      }
 
         const data = chartData['data'];
 
