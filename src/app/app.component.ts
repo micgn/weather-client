@@ -10,14 +10,10 @@ declare var Dygraph: any;
 })
 export class AppComponent implements OnInit {
 
-  current_t1: number;
-  time_t1: number;
-  current_t2: number;
-  time_t2: number;
-  current_p: number;
-  time_p: number;
-  current_h: number;
-  time_h: number;
+  tableHeaders: Array<string> = [];
+  t1Values: Array<{ value: number, timestamp: number }> = [];
+  hValues: Array<{ value: number, timestamp: number }> = [];
+  pValues: Array<{ value: number, timestamp: number }> = [];
 
 
   constructor(private backend: BackendService) {
@@ -45,24 +41,50 @@ export class AppComponent implements OnInit {
     this.backend.chartData().subscribe(chartData => {
 
       const current = chartData['current'];
+
+      this.tableHeaders.push('current');
+
       if (current != null) {
         if (current['TEMPERATURE_1'] != null) {
-          this.current_t1 = current['TEMPERATURE_1']['value'];
-          this.time_t1 = current['TEMPERATURE_1']['time'];
+          const t1 = current['TEMPERATURE_1'];
+          this.t1Values.push({value: t1['value'], timestamp: t1['time']});
+        } else {
+          this.t1Values.push({value: null, timestamp: null});
         }
-        if (current['TEMPERATURE_2'] != null) {
-          this.current_t2 = current['TEMPERATURE_2']['value'];
-          this.time_t2 = current['TEMPERATURE_2']['time'];
-        }
+
         if (current['HUMIDITY'] != null) {
-          this.current_h = current['HUMIDITY']['value'];
-          this.time_h = current['HUMIDITY']['time'];
+          const h = current['HUMIDITY'];
+          this.hValues.push({value: h['value'], timestamp: h['time']});
+        } else {
+          this.hValues.push({value: null, timestamp: null});
         }
+
         if (current['PRESSURE'] != null) {
-          this.current_p = current['PRESSURE']['value'];
-          this.time_p = current['PRESSURE']['time'];
+          const p = current['PRESSURE'];
+          this.pValues.push({value: p['value'], timestamp: p['time']});
+        } else {
+          this.pValues.push({value: null, timestamp: null});
         }
+        }
+
+      const minMax = chartData['minMax'];
+      for (const mm of minMax) {
+        const db = mm['daysBack'];
+        if (db < 999) {
+          this.tableHeaders.push(db + ' days MIN');
+          this.tableHeaders.push('MAX');
+        } else {
+          this.tableHeaders.push('overall MIN');
+          this.tableHeaders.push('MAX');
+        }
+        this.addCol(mm, 'min', 'TEMPERATURE_1', this.t1Values);
+        this.addCol(mm, 'max', 'TEMPERATURE_1', this.t1Values);
+        this.addCol(mm, 'min', 'HUMIDITY', this.hValues);
+        this.addCol(mm, 'max', 'HUMIDITY', this.hValues);
+        this.addCol(mm, 'min', 'PRESSURE', this.pValues);
+        this.addCol(mm, 'max', 'PRESSURE', this.pValues);
       }
+
 
         const data = chartData['data'];
 
@@ -89,6 +111,10 @@ export class AppComponent implements OnInit {
       }
     );
 
+  }
 
+  private addCol(minMax: object, select1: string, select2: string, pushTo: Array<{ value: number, timestamp: number }>) {
+    const x = minMax[select1][select2];
+    pushTo.push({value: x['value'], timestamp: x['time']});
   }
 }

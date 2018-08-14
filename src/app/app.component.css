@@ -19,10 +19,7 @@
   padding: 20px;
 }
 
-tr:nth-child(even) {
-  background: #FFF
+thead tr td {
+  font-weight: bold;
 }
 
-tr:nth-child(odd) {
-  background: #CCC
-}

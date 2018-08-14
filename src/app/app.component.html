@@ -1,24 +1,31 @@
 <div id="current">
   <table>
+    <thead>
     <tr>
-      <td>temperature 1</td>
-      <td>{{current_t1 | number:'2.1-1' }}°C</td>
-      <td>{{time_t1 | date:'medium'}}</td>
+      <td></td>
+      <td *ngFor="let header of tableHeaders" colspan="2">{{header}}</td>
     </tr>
+    </thead>
     <tr>
-      <td>temperature 2</td>
-      <td>{{current_t2 | number:'2.1-1' }}°C</td>
-      <td>{{time_t2 | date:'medium'}}</td>
+      <td>temperature</td>
+      <ng-container *ngFor="let value of t1Values">
+        <td>{{value.value | number:'2.1-1'}} °C</td>
+        <td>{{value.timestamp | date:'H:mm d.M.'}}</td>
+      </ng-container>
     </tr>
     <tr>
       <td>humidity</td>
-      <td>{{current_h | number:'2.1-1' }}%</td>
-      <td>{{time_h | date:'medium'}}</td>
+      <ng-container *ngFor="let value of hValues">
+        <td>{{value.value | number:'2.1-1'}} %</td>
+        <td>{{value.timestamp | date:'H:mm d.M.'}}</td>
+      </ng-container>
     </tr>
     <tr>
       <td>pressure</td>
-      <td>{{current_p | number:'2.1-1' }} hPa</td>
-      <td>{{time_p | date:'medium'}}</td>
+      <ng-container *ngFor="let value of pValues">
+        <td>{{value.value | number:'2.0-1'}}</td>
+        <td>{{value.timestamp | date:'H:mm d.M.'}}</td>
+      </ng-container>
     </tr>
   </table>
 </div>
