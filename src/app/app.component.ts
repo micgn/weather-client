@@ -92,22 +92,66 @@ export class AppComponent implements OnInit {
         const mappedData = data.map(col => [new Date(col[0])].concat(col.slice(1)));
 
         const g = new Dygraph(document.getElementById('chart'), mappedData, {
-          legend: 'always',
+          legend: 'never',
           labelsSeparateLines: true,
           showRoller: false,
           rollPeriod: 0,
           customBars: false,
           ylabel: 'Temperature (°C)',
-          strokeWidth: 3,
-          highlightCircleSize: 6,
+          strokeWidth: 2,
+          highlightCircleSize: 0,
           series: {
-            'humidity': {
+            'TEMPERATURE_1': {
+              axis: 'y2'
+            },
+            'HUMIDITY': {
+              strokeWidth: 1
+            },
+            'PRESSURE': {
               strokeWidth: 1
             }
           },
-          colors: ['#cc3300', '#ff9966', 'blue', 'yellow'],
+          axes: {
+            y: {
+              axisLabelFormatter: function (y) {
+                return y.toFixed(0);
+              }
+            },
+            y2: {
+              axisLabelFormatter: function (y) {
+                return y.toFixed(0);
+              }
+            }
+          },
+          colors: ['#cc3300', '#ff9966', 'blue', 'green'],
           labels: ['Date'].concat(chartData['series'])
         });
+
+      const start = new Date(data[0][0]);
+      const end = new Date(data[data.length - 1][0]);
+
+      start.setDate(start.getDate() + 1);
+      start.setMinutes(0);
+      start.setHours(0);
+      start.setSeconds(0);
+
+      const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      const annotations = [];
+      while (start < end) {
+        annotations.push({
+          series: 'TEMPERATURE_1',
+          x: start.getTime(),
+          shortText: weekDays[start.getDay()],
+          text: weekDays[start.getDay()],
+          width: 30,
+          height: 15
+        });
+        start.setDate(start.getDate() + 1);
+      }
+
+      g.setAnnotations(annotations);
+
       }
     );
 
