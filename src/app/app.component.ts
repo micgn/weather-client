@@ -21,6 +21,11 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.draw();
+  }
+
+
+  private draw() {
 
     /*    const data = `Date,temperature 1,temperature 2,humidity,pressure
 2016/01/01 12:30:33,10,20,15,22
@@ -39,6 +44,11 @@ export class AppComponent implements OnInit {
     ];*/
 
     this.backend.chartData().subscribe(chartData => {
+
+        this.tableHeaders = [];
+        this.t1Values = [];
+        this.hValues = [];
+        this.pValues = [];
 
         const current = chartData['current'];
 
@@ -152,6 +162,9 @@ export class AppComponent implements OnInit {
 
       }
     );
+
+    // reload every 2 minutes
+    setTimeout(() => this.draw(), 120 * 1000);
 
   }
 
