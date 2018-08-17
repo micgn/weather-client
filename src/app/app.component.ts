@@ -71,11 +71,9 @@ export class AppComponent implements OnInit {
       for (const mm of minMax) {
         const db = mm['daysBack'];
         if (db < 999) {
-          this.tableHeaders.push(db + ' days MIN');
-          this.tableHeaders.push('MAX');
+          this.tableHeaders.push(db + ' days');
         } else {
-          this.tableHeaders.push('overall MIN');
-          this.tableHeaders.push('MAX');
+          this.tableHeaders.push('overall');
         }
         this.addCol(mm, 'min', 'TEMPERATURE_1', this.t1Values);
         this.addCol(mm, 'max', 'TEMPERATURE_1', this.t1Values);
