@@ -106,25 +106,22 @@ export class AppComponent implements OnInit {
           rollPeriod: 0,
           customBars: false,
           ylabel: 'Temperature (°C)',
-          strokeWidth: 2,
           highlightCircleSize: 0,
           series: {
             'TEMPERATURE_1': {
-              axis: 'y2'
+              strokeWidth: 2,
+              axis: 'y'
             },
             'HUMIDITY': {
-              strokeWidth: 1
+              strokeWidth: 1,
+              axis: 'y'
             },
             'PRESSURE': {
-              strokeWidth: 1
+              strokeWidth: 1,
+              axis: 'y'
             }
           },
           axes: {
-            y: {
-              axisLabelFormatter: function (y) {
-                return y.toFixed(0);
-              }
-            },
             y2: {
               axisLabelFormatter: function (y) {
                 return y.toFixed(0);
