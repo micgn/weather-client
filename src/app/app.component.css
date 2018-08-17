@@ -23,3 +23,29 @@ thead tr td {
   font-weight: bold;
 }
 
+td.header {
+  font-weight: bold;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 7px;
+}
+
+td.small {
+  font-size: smaller;
+}
+
+td.t {
+  color: #cc3300;
+  font-weight: bold;
+}
+
+td.h {
+  color: blue;
+}
+
+td.p {
+  color: green;
+}
