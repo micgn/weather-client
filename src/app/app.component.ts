@@ -40,48 +40,48 @@ export class AppComponent implements OnInit {
 
     this.backend.chartData().subscribe(chartData => {
 
-      const current = chartData['current'];
+        const current = chartData['current'];
 
-      this.tableHeaders.push('current');
+        this.tableHeaders.push('current');
 
-      if (current != null) {
-        if (current['TEMPERATURE_1'] != null) {
-          const t1 = current['TEMPERATURE_1'];
-          this.t1Values.push({value: t1['value'], timestamp: t1['time']});
-        } else {
-          this.t1Values.push({value: null, timestamp: null});
+        if (current != null) {
+          if (current['TEMPERATURE_1'] != null) {
+            const t1 = current['TEMPERATURE_1'];
+            this.t1Values.push({value: t1['value'], timestamp: t1['time']});
+          } else {
+            this.t1Values.push({value: null, timestamp: null});
+          }
+
+          if (current['HUMIDITY'] != null) {
+            const h = current['HUMIDITY'];
+            this.hValues.push({value: h['value'], timestamp: h['time']});
+          } else {
+            this.hValues.push({value: null, timestamp: null});
+          }
+
+          if (current['PRESSURE'] != null) {
+            const p = current['PRESSURE'];
+            this.pValues.push({value: p['value'], timestamp: p['time']});
+          } else {
+            this.pValues.push({value: null, timestamp: null});
+          }
         }
 
-        if (current['HUMIDITY'] != null) {
-          const h = current['HUMIDITY'];
-          this.hValues.push({value: h['value'], timestamp: h['time']});
-        } else {
-          this.hValues.push({value: null, timestamp: null});
+        const minMax = chartData['minMax'];
+        for (const mm of minMax) {
+          const db = mm['daysBack'];
+          if (db < 999) {
+            this.tableHeaders.push(db + ' days');
+          } else {
+            this.tableHeaders.push('overall');
+          }
+          this.addCol(mm, 'min', 'TEMPERATURE_1', this.t1Values);
+          this.addCol(mm, 'max', 'TEMPERATURE_1', this.t1Values);
+          this.addCol(mm, 'min', 'HUMIDITY', this.hValues);
+          this.addCol(mm, 'max', 'HUMIDITY', this.hValues);
+          this.addCol(mm, 'min', 'PRESSURE', this.pValues);
+          this.addCol(mm, 'max', 'PRESSURE', this.pValues);
         }
-
-        if (current['PRESSURE'] != null) {
-          const p = current['PRESSURE'];
-          this.pValues.push({value: p['value'], timestamp: p['time']});
-        } else {
-          this.pValues.push({value: null, timestamp: null});
-        }
-        }
-
-      const minMax = chartData['minMax'];
-      for (const mm of minMax) {
-        const db = mm['daysBack'];
-        if (db < 999) {
-          this.tableHeaders.push(db + ' days');
-        } else {
-          this.tableHeaders.push('overall');
-        }
-        this.addCol(mm, 'min', 'TEMPERATURE_1', this.t1Values);
-        this.addCol(mm, 'max', 'TEMPERATURE_1', this.t1Values);
-        this.addCol(mm, 'min', 'HUMIDITY', this.hValues);
-        this.addCol(mm, 'max', 'HUMIDITY', this.hValues);
-        this.addCol(mm, 'min', 'PRESSURE', this.pValues);
-        this.addCol(mm, 'max', 'PRESSURE', this.pValues);
-      }
 
 
         const data = chartData['data'];
@@ -125,30 +125,30 @@ export class AppComponent implements OnInit {
           labels: ['Date'].concat(chartData['series'])
         });
 
-      const start = new Date(data[0][0]);
-      const end = new Date(data[data.length - 1][0]);
+        const start = new Date(data[0][0]);
+        const end = new Date(data[data.length - 1][0]);
 
-      start.setDate(start.getDate() + 1);
-      start.setMinutes(0);
-      start.setHours(0);
-      start.setSeconds(0);
-
-      const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-      const annotations = [];
-      while (start < end) {
-        annotations.push({
-          series: 'TEMPERATURE_1',
-          x: start.getTime(),
-          shortText: weekDays[start.getDay()],
-          text: weekDays[start.getDay()],
-          width: 30,
-          height: 15
-        });
         start.setDate(start.getDate() + 1);
-      }
+        start.setMinutes(0);
+        start.setHours(0);
+        start.setSeconds(0);
 
-      g.setAnnotations(annotations);
+        const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        const annotations = [];
+        while (start < end) {
+          annotations.push({
+            series: 'TEMPERATURE_1',
+            x: start.getTime(),
+            shortText: weekDays[start.getDay()],
+            text: weekDays[start.getDay()],
+            width: 30,
+            height: 15
+          });
+          start.setDate(start.getDate() + 1);
+        }
+
+        g.setAnnotations(annotations);
 
       }
     );
