@@ -1,26 +1,24 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {BackendService} from './backend.service';
+import {ChartComponent} from './chart/chart.component';
+import {TableComponent} from './table/table.component';
 
-declare var Dygraph: any;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterViewInit {
 
-  tableHeaders: Array<string> = [];
-  t1Values: Array<{ value: number, timestamp: number }> = [];
-  hValues: Array<{ value: number, timestamp: number }> = [];
-  pValues: Array<{ value: number, timestamp: number }> = [];
+  @ViewChild(TableComponent) table;
+  @ViewChild(ChartComponent) chart;
 
 
   constructor(private backend: BackendService) {
   }
 
-
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.draw();
   }
 
@@ -44,119 +42,8 @@ export class AppComponent implements OnInit {
     ];*/
 
     this.backend.chartData().subscribe(chartData => {
-
-        this.tableHeaders = [];
-        this.t1Values = [];
-        this.hValues = [];
-        this.pValues = [];
-
-        const current = chartData['current'];
-
-        this.tableHeaders.push('current');
-
-        if (current != null) {
-          if (current['TEMPERATURE_1'] != null) {
-            const t1 = current['TEMPERATURE_1'];
-            this.t1Values.push({value: t1['value'], timestamp: t1['time']});
-          } else {
-            this.t1Values.push({value: null, timestamp: null});
-          }
-
-          if (current['HUMIDITY'] != null) {
-            const h = current['HUMIDITY'];
-            this.hValues.push({value: h['value'], timestamp: h['time']});
-          } else {
-            this.hValues.push({value: null, timestamp: null});
-          }
-
-          if (current['PRESSURE'] != null) {
-            const p = current['PRESSURE'];
-            this.pValues.push({value: p['value'], timestamp: p['time']});
-          } else {
-            this.pValues.push({value: null, timestamp: null});
-          }
-        }
-
-        const minMax = chartData['minMax'];
-        for (const mm of minMax) {
-          const db = mm['daysBack'];
-          if (db < 999) {
-            this.tableHeaders.push(db + ' days');
-          } else {
-            this.tableHeaders.push('overall');
-          }
-          this.addCol(mm, 'min', 'TEMPERATURE_1', this.t1Values);
-          this.addCol(mm, 'max', 'TEMPERATURE_1', this.t1Values);
-          this.addCol(mm, 'min', 'HUMIDITY', this.hValues);
-          this.addCol(mm, 'max', 'HUMIDITY', this.hValues);
-          this.addCol(mm, 'min', 'PRESSURE', this.pValues);
-          this.addCol(mm, 'max', 'PRESSURE', this.pValues);
-        }
-
-
-        const data = chartData['data'];
-
-        // map first column to date object
-        const mappedData = data.map(col => [new Date(col[0])].concat(col.slice(1)));
-
-        const g = new Dygraph(document.getElementById('chart'), mappedData, {
-          legend: 'never',
-          labelsSeparateLines: true,
-          showRoller: false,
-          rollPeriod: 0,
-          customBars: false,
-          ylabel: 'Temperature (°C)',
-          highlightCircleSize: 0,
-          series: {
-            'TEMPERATURE_1': {
-              strokeWidth: 2,
-              axis: 'y'
-            },
-            'HUMIDITY': {
-              strokeWidth: 1,
-              axis: 'y'
-            },
-            'PRESSURE': {
-              strokeWidth: 1,
-              axis: 'y'
-            }
-          },
-          axes: {
-            y2: {
-              axisLabelFormatter: function (y) {
-                return y.toFixed(0);
-              }
-            }
-          },
-          colors: ['#cc3300', '#ff9966', 'blue', 'green'],
-          labels: ['Date'].concat(chartData['series'])
-        });
-
-        const start = new Date(data[0][0]);
-        const end = new Date(data[data.length - 1][0]);
-
-        start.setDate(start.getDate() + 1);
-        start.setMinutes(0);
-        start.setHours(0);
-        start.setSeconds(0);
-
-        const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-        const annotations = [];
-        while (start < end) {
-          annotations.push({
-            series: 'TEMPERATURE_1',
-            x: start.getTime(),
-            shortText: weekDays[start.getDay()],
-            text: weekDays[start.getDay()],
-            width: 30,
-            height: 15
-          });
-          start.setDate(start.getDate() + 1);
-        }
-
-        g.setAnnotations(annotations);
-
+        this.table.display(chartData);
+        this.chart.display(chartData);
       }
     );
 
@@ -165,8 +52,4 @@ export class AppComponent implements OnInit {
 
   }
 
-  private addCol(minMax: object, select1: string, select2: string, pushTo: Array<{ value: number, timestamp: number }>) {
-    const x = minMax[select1][select2];
-    pushTo.push({value: x['value'], timestamp: x['time']});
-  }
 }

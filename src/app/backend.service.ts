@@ -12,8 +12,6 @@ export class BackendService {
 
   chartData() {
 
-    // TODO configurable
-
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
